@@ -1,0 +1,409 @@
+local w, h = term.getSize()
+local krok = "edition"
+local evybrat = ""
+local tArgs = { ... }
+local modem = ""
+local adID = nil
+local adUser = ""
+local adPass = ""
+local rfreq = 0
+local i = 0
+local idPC = os.getComputerID()
+local modemC = ""
+local nUser = "Administrator"
+local nPass = ""
+local cPass = ""
+local barvy = {"2048", "2048","16384", "8192"}
+local BarvaI = tonumber(barvy[math.random(1, 4)])
+
+
+local function prc(text, y)
+  local w = term.getSize()
+  local _, cy = term.getCursorPos()
+  term.setCursorPos(math.ceil((w-#text)/2), y or cy)
+  write(text)
+end
+
+function restarting ()
+    term.setBackgroundColor(colors.lightGray)
+    term.clear()
+    sleep (0.1)
+    term.setBackgroundColor(colors.gray)
+    term.clear()
+    sleep (0.1)
+    term.setBackgroundColor(colors.black)
+    term.setTextColor(colors.black)
+    term.clear()
+    term.setBackgroundColor(colors.white)
+    term.setTextColor(colors.black)
+    term.clear()
+    term.setCursorPos(w/2-6, h/2)
+    write "Restarting..."
+    term.setBackgroundColor(colors.white)
+    term.setTextColor(colors.blue)
+    term.setCursorPos(w/2-5,h-1)
+    write "  Pepek"
+    term.setCursorPos(w/2+3,h-1)
+    write "Soft  "
+    term.setCursorPos(w/2+2,h-1)
+    term.setTextColor(colors.lime)
+    write "@"
+    sleep(1)
+    os.reboot ()
+end
+
+local function downloading(kod, cestaP)
+	local WinDown = window.create(term.current(),15,8,w-15,5)
+	WinDown.setBackgroundColor(colors.lightGray)
+	WinDown.clear()
+	WinDown.setTextColor(colors.black)
+	WinDown.setCursorPos(2,1)
+	WinDown.write "Downloading files..."
+	term.setCursorPos(1,-5)
+	term.setBackgroundColor(colors.lightGray)
+	shell.run("pastebin get "..kod.." "..cestaP)
+	
+end
+
+function start()
+shell.run("pastebin get GssKCexp /stahni.lua")
+	if (krok == "edition") then
+		edice()
+	elseif (krok == "install") then
+		instalace()
+	elseif (krok == "network") then
+		network()
+	elseif (krok == "account") then
+		account()
+	elseif (krok == "end") then
+		fs.delete("/stahni.lua")
+		restarting()
+	end
+term.setCursorPos(1,1)
+end
+
+function pozadi()
+
+local myWindow = window.create(term.current(),1,1,12,h)
+myWindow.setBackgroundColor(BarvaI)
+myWindow.clear()
+
+myWindow.setCursorPos(2,5)
+if (krok == "edition") then myWindow.setTextColor(colors.lightGray) else myWindow.setTextColor(colors.white) end
+myWindow.write("- Edition")
+myWindow.setCursorPos(2,7)
+if (krok == "install") then myWindow.setTextColor(colors.lightGray) else myWindow.setTextColor(colors.white) end
+myWindow.write("- Install")
+myWindow.setCursorPos(2,9)
+if (krok == "network") then myWindow.setTextColor(colors.lightGray) else myWindow.setTextColor(colors.white) end
+myWindow.write("- Network")
+myWindow.setCursorPos(2,11)
+if (krok == "account") then myWindow.setTextColor(colors.lightGray) else myWindow.setTextColor(colors.white) end
+myWindow.write("- Account")
+myWindow.setCursorPos(2,h)
+myWindow.setTextColor(colors.white)
+myWindow.write("Pepek@Soft")
+
+plocha = window.create(term.current(),13,1,w-12,h)
+ww = w-12
+plocha.setBackgroundColor(colors.white)
+plocha.clear()
+plocha.setTextColor(colors.black)
+plocha.setCursorPos(ww/2-12,1)	
+plocha.write("Pepdroll Seven Installer")
+
+plocha.setBackgroundColor(colors.lightGray)
+plocha.setCursorPos(ww/2-4,h-1)
+plocha.write" Next "
+plocha.setBackgroundColor(colors.white)
+plocha.setTextColor(colors.black)
+end
+
+function edice()
+	pozadi()
+	plocha.setBackgroundColor(colors.lightGray)
+	plocha.setCursorPos(ww/2-5,h-1)
+	plocha.write" Install "
+	plocha.setBackgroundColor(colors.white)
+	local eClient = window.create(term.current(),15,5,w-15,5)
+	if (evybrat == "client") then
+	eClient.setBackgroundColor(colors.lightBlue)
+	else
+	eClient.setBackgroundColor(colors.lightGray)
+	end
+	eClient.clear()
+	eClient.setTextColor(colors.black)
+	eClient.setCursorPos(2,1)
+	eClient.write "Standard"
+	eClient.setTextColor(colors.white)
+	eClient.setCursorPos(2,3)
+	eClient.write "Client with basic functions and"
+	eClient.setCursorPos(2,4)
+	eClient.write "connectivity to the corporate net"
+
+
+	local eServer = window.create(term.current(),15,12,w-15,5)
+	if (evybrat == "server") then
+	eServer.setBackgroundColor(colors.lightBlue)
+	else
+	eServer.setBackgroundColor(colors.lightGray)
+	end
+	eServer.clear()
+	eServer.setTextColor(colors.black)
+	eServer.setCursorPos(2,1)
+	eServer.write "Server"
+	eServer.setTextColor(colors.white)
+	eServer.setCursorPos(2,3)
+	eServer.write "Server with many features to setup"
+	eServer.setCursorPos(2,4)
+	eServer.write "Designed for clients with Pepdroll"
+	eServer.setCursorPos(2,5)
+	eServer.write "Standard Edition."
+
+	
+	while true do
+	event, button, x,y = os.pullEvent()
+						
+		if event == "mouse_click" and x >= 15 and x<= w-1 and y >= 5 and y <= 10 and button == 1 then
+		evybrat = "client"
+		edice()
+		elseif event == "mouse_click" and x >= 15 and x<= w-1 and y >= 12 and y <= 17 and button == 1 then
+		evybrat = "server"
+		edice()
+		elseif event == "mouse_click" and x >= 25 and x<= 34 and y == h-1 and button == 1 then
+		plocha.setBackgroundColor(colors.gray)
+		plocha.setCursorPos(ww/2-5,h-1)
+		plocha.write" Install "
+		sleep(0.1)
+
+		if (evybrat == "") then
+			edice()
+		else
+			krok = "install"
+			start()
+		end
+		
+		end
+	end
+end
+
+function instalace()
+pozadi()
+plocha.setCursorPos(ww/2-16,5)	
+plocha.write("Install is in progress, please wait")
+downloading("0xh6jEx1", "/startup.lua") -- startup
+downloading("HyhMtGvd", "/C/system/.core/desktop.lua") -- desktop
+downloading("EEVJPR7F", "/C/system/api/closeAPP")
+downloading("DSNcZuMZ", "/C/system/api/bluescreen.lua")
+downloading("vxJjQzem", "/C/setting.lua")
+downloading("XBXHNqS1", "/LICENSE.txt")
+if (evybrat == "server") then
+downloading("z02yAN3M", "/C/Programs/PepekSoft/smanager.lua")
+fs.makeDir("/server")
+end
+
+local sf = fs.open("/startup", "w")
+sf.writeLine("shell.run(\"/startup.lua\")")
+sf.close()
+
+krok = "network"
+start()
+	while true do
+	event, button, x,y = os.pullEvent()
+	end
+end
+
+function defmodem(size)
+local dm = fs.open("/C/system/.core/defmodem","w")
+dm.writeLine(size)
+dm.close()
+end
+ 
+function prijmout()
+local odpoved = false
+timerRX = os.startTimer(2)
+    while true do
+    local event,p1,p2,p3,p4 = os.pullEvent()
+      if event == ("modem_message") then
+          if (p3 == 552) then
+			odpoved = true
+                if (p4 == "true") then
+                local c = fs.open ("/C/system/.core/AD", "w")
+                c.writeLine(tostring(adID))
+                c.close()
+                plocha.setCursorPos(2,17)
+				plocha.setTextColor(colors.green)
+                plocha.write"Successfully connected to the server."
+				sleep(0.5)
+				local ucet = fs.open("/C/system/.core/ucet","w")
+				ucet.close()
+				o=fs.open ("/C/system/.core/defuser", "w")
+				o.writeLine(adUser)
+				o.close()
+				restarting ()
+                else
+				plocha.setCursorPos(2,17)
+				plocha.setTextColor(colors.red)
+                plocha.write"Error, invalid login!"
+				sleep(0.5)
+                end
+            end
+      elseif event == "timer" then
+        if p1 >= timerRX then
+        plocha.setCursorPos(2,17)
+		plocha.setTextColor(colors.red)
+        if not odpoved then plocha.write"Error, server not found!" sleep(1) end
+		network()
+        end
+      end
+    end
+end
+ 
+function dotaz()
+	if adUser ~= "" and adID ~= nil then
+		modemC.open(idPC)
+		modemC.transmit(tonumber(adID),550,idPC)
+		modemC.transmit(tonumber(adID),551,adUser)
+		modemC.transmit(tonumber(adID),552,adPass)
+		prijmout()
+	end
+end
+
+function ServerManager()
+local sf = fs.open("/C/system/Users/"..nUser.."/Desktop/SrvMan.src", "w")
+sf.writeLine("shell.run(\"/C/Programs/PepekSoft/smanager.lua\")")
+sf.close()
+end
+
+function network()
+pozadi()
+if fs.exists("/C/system/.core/defmodem") then
+	s = fs.open("/C/system/.core/defmodem","r")
+	modem = s.readLine()
+	s.close()
+	AD = true
+	modemE = peripheral.wrap(modem)
+	if not modemE then
+	fs.delete("/C/system/.core/defmodem")
+	network()
+	end
+
+else
+	modem = "offline"
+	AD = false
+end
+
+plocha.setCursorPos(2,3)
+plocha.write"Choose your primary modem."
+if not (modem == "offline") then
+plocha.setCursorPos(2,11)
+plocha.write"If you already have an AD server,"
+plocha.setCursorPos(2,12)
+plocha.write" you can connect here."
+plocha.setCursorPos(2,14)
+plocha.write"Server  ID:"
+plocha.setCursorPos(2,15)
+plocha.write"Admin user:"
+plocha.setCursorPos(2,16)
+plocha.write"Admin pass:"
+plocha.setBackgroundColor(colors.lightGray)
+plocha.setCursorPos(14,14)
+plocha.write"               "
+if not (adID == nil) then plocha.setCursorPos(15,14) plocha.write(tostring(adID)) end
+plocha.setCursorPos(14,15)
+plocha.write"               "
+if not (adUser == "") then plocha.setCursorPos(15,15) plocha.write(adUser) end
+plocha.setCursorPos(14,16)
+plocha.write"               "
+if not (adPass == "") then plocha.setCursorPos(15,16) plocha.write("Password") end
+end
+plocha.setBackgroundColor(colors.white)
+plocha.setTextColor(colors.lightGray)
+plocha.setCursorPos(1,4)
+plocha.write"The settings can be changed at any time!"
+plocha.setTextColor(colors.black)
+plocha.setBackgroundColor(colors.lightGray)
+plocha.setCursorPos(8,5)
+if (modem == "top") then plocha.setBackgroundColor(colors.gray) else plocha.setBackgroundColor(colors.lightGray) end
+plocha.write" TOP     "
+plocha.setCursorPos(8,7)
+if (modem == "left") then plocha.setBackgroundColor(colors.gray) else plocha.setBackgroundColor(colors.lightGray) end
+plocha.write" LEFT    "
+plocha.setCursorPos(8,9)
+if (modem == "right") then plocha.setBackgroundColor(colors.gray) else plocha.setBackgroundColor(colors.lightGray) end
+plocha.write" RIGHT   "
+plocha.setCursorPos(20,5)
+if (modem == "back") then plocha.setBackgroundColor(colors.gray) else plocha.setBackgroundColor(colors.lightGray) end
+plocha.write" BACK    "
+plocha.setCursorPos(20,7)
+if (modem == "bottom") then plocha.setBackgroundColor(colors.gray) else plocha.setBackgroundColor(colors.lightGray) end
+plocha.write" BOTTOM  "
+plocha.setCursorPos(20,9)
+if (modem == "offline") then plocha.setBackgroundColor(colors.gray) else plocha.setBackgroundColor(colors.lightGray) end
+plocha.write" OFFLINE "
+
+	while true do
+	event, button, x,y = os.pullEvent()
+	
+	if event == "mouse_click" and x >= 20 and x<= 28 and y == 5 and button == 1 then
+	defmodem("top")
+	network()
+	elseif event == "mouse_click" and x >= 32 and x<= 40 and y == 5 and button == 1 then
+	defmodem("back")
+	network()
+	elseif event == "mouse_click" and x >= 20 and x<= 28 and y == 7 and button == 1 then
+	defmodem("left")
+	network()
+	elseif event == "mouse_click" and x >= 32 and x<= 40 and y == 7 and button == 1 then
+	defmodem("bottom")
+	network()
+	elseif event == "mouse_click" and x >= 20 and x<= 28 and y == 9 and button == 1 then
+	defmodem("right")
+	network()
+	elseif event == "mouse_click" and x >= 32 and x<= 40 and y == 9 and button == 1 then
+		if fs.exists("/C/system/.core/defmodem") then
+			fs.delete("/C/system/.core/defmodem")
+		end
+	network()
+	elseif event == "mouse_click" and x >= 26 and x<= 40 and y == 14 and AD and button == 1 then
+	term.setBackgroundColor(colors.lightBlue)
+	plocha.setBackgroundColor(colors.lightBlue)
+	plocha.setCursorPos(14,14)
+	plocha.write"               "
+	plocha.setCursorPos(15,14)
+	adID = read()
+	network()
+	elseif event == "mouse_click" and x >= 26 and x<= 40 and y == 15 and AD and button == 1 then
+	term.setBackgroundColor(colors.lightBlue)
+	plocha.setBackgroundColor(colors.lightBlue)
+	plocha.setCursorPos(14,15)
+	plocha.write"               "
+	plocha.setCursorPos(15,15)
+	adUser = read()
+	network()
+	elseif event == "mouse_click" and x >= 26 and x<= 40 and y == 16 and AD and button == 1 then
+	term.setBackgroundColor(colors.lightBlue)
+	plocha.setBackgroundColor(colors.lightBlue)
+	plocha.setCursorPos(14,16)
+	plocha.write"               "
+	plocha.setCursorPos(15,16)
+	adPass = read("x")
+	network()
+	elseif event == "mouse_click" and x >= 27 and x<= 32 and y == h-1 and button == 1 then
+		plocha.setBackgroundColor(colors.gray)
+		plocha.setCursorPos(ww/2-4,h-1)
+		plocha.write" Next "
+		sleep(0.1)
+		plocha.setBackgroundColor(colors.white)
+		if AD then
+		modemC = peripheral.wrap(modem)
+		dotaz()
+		end
+		krok = "end"
+		start()
+	end
+	
+	end
+end
+
+start()
